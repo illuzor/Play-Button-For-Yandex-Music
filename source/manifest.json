@@ -3,7 +3,7 @@
     "name": "__MSG_ext_name__",
     "short_name": "__MSG_ext_short_name__",
     "description": "__MSG_ext_description__",
-    "version": "2.0.14",
+    "version": "1.0.0",
     "author": "Artem Zanin",
     "default_locale": "en",
     "icons": {
@@ -18,7 +18,7 @@
     "permissions": [
         "storage",
         "tabs",
-        "https://play.pocketcasts.com/*/"
+        "https://music.yandex.ru/*/"
     ],
     "background": {
         "persistent": false,
@@ -28,12 +28,11 @@
     },
     "content_scripts": [{
         "matches": [
-            "https://play.pocketcasts.com/*/"
+            "https://music.yandex.ru/*/"
         ],
         "js": [
             "action-play.js",
-            "action-skip.js",
-            "log-listener.js"
+            "action-skip.js"
         ]
     }],
     "browser_action": {

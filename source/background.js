@@ -4,7 +4,7 @@ const ACTION_PLAY = "play";
 const ACTION_FORWARD = "forward";
 const ACTION_BACK = "back";
 
-var pcTab;
+var ymTab;
 var playFromMediaKey;
 var action = "";
 
@@ -53,21 +53,21 @@ function skipButtonPress(skipDirection) {
 }
 
 function gotoGetWindows() {
-    pcTab = null;
+    ymTab = null;
     chrome.windows.getAll({ populate: true }, getWindows);
 }
 
 function getWindows(windows) {
-    var pcTabs = [];
+    var ymTabs = [];
     for (var i = 0; i < windows.length; i++) {
         for (var j = 0; j < windows[i].tabs.length; j++) {
             if (windows[i].tabs[j].url.includes(URL))
-                pcTabs.push(windows[i].tabs[j]);
+                ymTabs.push(windows[i].tabs[j]);
         }
     }
 
-    if (pcTabs.length) {
-        pcTab = pcTabs[0];
+    if (ymTabs.length) {
+        ymTab = ymTabs[0];
         performAction();
     } else {
         if (action == ACTION_PLAY && !playFromMediaKey)
@@ -79,8 +79,8 @@ function performAction() {
     switch (action) {
         case ACTION_PLAY:
             chrome.storage.sync.get({ play: "first" }, function (items) {
-                chrome.tabs.executeScript(pcTab.id, { code: 'var play = "' + items.play + '";' }, function () {
-                    chrome.tabs.executeScript(pcTab.id, { file: "action-play.js" }, playPause);
+                chrome.tabs.executeScript(ymTab.id, { code: 'var play = "' + items.play + '";' }, function () {
+                    chrome.tabs.executeScript(ymTab.id, { file: "action-play.js" }, playPause);
                 });
             });
             break;
@@ -106,9 +106,9 @@ function openNewTab() {
 }
 
 function skip(type) {
-    chrome.tabs.executeScript(pcTab.id, { code: 'var type = "' + type + '";' },
+    chrome.tabs.executeScript(ymTab.id, { code: 'var type = "' + type + '";' },
         function () {
-            chrome.tabs.executeScript(pcTab.id, { file: "action-skip.js" });
+            chrome.tabs.executeScript(ymTab.id, { file: "action-skip.js" });
         });
 }
 

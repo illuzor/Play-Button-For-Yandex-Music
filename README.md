@@ -1,29 +1,22 @@
-Play-Button-For-Pocket-Casts 2
+Play-Button-For-Yandex-Music
 ============================
 
 ## Install
-[![Chrome extension](http://download.illuzor.com/images/github/Badges/chrome_badge.png)](https://chrome.google.com/webstore/detail/playpause-button-for-pock/ogdnlmiknnmedpcnjnkjncdjjgfdkiik)
 
-[![Firefox extension](http://download.illuzor.com/images/github/Badges/ff_badge.png)](https://addons.mozilla.org/addon/play-button-for-pocketcasts/)
+TODO
 
 ## Description
 
-This extension allows controlling playing of a current podcast on pocketcasts site by button and by keyboard media keys.
-
-## Features
-- Hardware media keys support (may be disabled in options);
-- Extremely lightweight. About 10 kilobytes;
-- Without unnecessary permissions;
-- Easy to use.
+TODO
 
 ## Keyboard media keys support:
  - Play/Pause ⏯;
- - Back ⏮ - skip back;
- - Forward ⏭ - skip forward.
+ - Back ⏮ - previous track;
+ - Forward ⏭ - next track.
 
 ## Screenshot
 
-![pc_screenshot2.png](http://download.illuzor.com/images/github/pc_screenshot2.png)
+TODO
 
 ## Localization
 This extension supports multilanguage. If you want help to translate it to your language:
@@ -38,4 +31,4 @@ This extension supports multilanguage. If you want help to translate it to your 
 Or just send me translated **messages.json** via email.
 
 ## See also
-[Play-Button-For-Google-Play-Music](https://github.com/illuzor/Play-Button-For-Google-Play-Music)
+[Play-Button-For-Pocket-Casts](https://github.com/illuzor/Play-Button-For-Pocket-Casts)

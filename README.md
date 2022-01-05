@@ -15,8 +15,7 @@ This extension allows controlling playing of a current track on yandex music sit
  - Forward ⏭ - next track.
 
 ## Screenshot
-
-TODO
+![ym_screenshot](https://user-images.githubusercontent.com/1530314/148223680-196a735c-0258-4c8c-837d-d6091cc422d1.png)
 
 ## Localization
 This extension supports multilanguage. If you want help to translate it to your language:

@@ -2,7 +2,7 @@ Play-Button-For-Yandex-Music
 ============================
 
 ## Install
-[![Chrome extension](https://user-images.githubusercontent.com/1530314/148227598-da334e7a-9cc7-4e76-8278-56ab13e9db31.png)](https://chrome.google.com/webstore/detail/ofiimbenfigghacebjfkihnklgifkcnh)
+[![Chrome extension](https://user-images.githubusercontent.com/1530314/148227598-da334e7a-9cc7-4e76-8278-56ab13e9db31.png)](https://chrome.google.com/webstore/detail/playpause-button-for-yand/ofiimbenfigghacebjfkihnklgifkcnh)
 
 ## Description
 

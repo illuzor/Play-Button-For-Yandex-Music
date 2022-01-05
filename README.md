@@ -7,7 +7,7 @@ TODO
 
 ## Description
 
-TODO
+This extension allows controlling playing of a current track on yandex music site by button and by keyboard media keys.
 
 ## Keyboard media keys support:
  - Play/Pause ⏯;

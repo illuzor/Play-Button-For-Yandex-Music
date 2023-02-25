@@ -8,7 +8,7 @@ var ymTab;
 var playFromMediaKey;
 var action = "";
 
-chrome.browserAction.onClicked.addListener(buttonClick);
+chrome.action.onClicked.addListener(buttonClick);
 chrome.commands.onCommand.addListener(mediaButtonPress);
 
 function buttonClick() {
@@ -32,7 +32,7 @@ function mediaButtonPress(command) {
 }
 
 function playButtonPress() {
-    chrome.storage.sync.get({ play_enabled: true },
+    chrome.storage.sync.get({play_enabled: true},
         function (items) {
             if (items.play_enabled) {
                 action = ACTION_PLAY;
@@ -43,7 +43,7 @@ function playButtonPress() {
 }
 
 function skipButtonPress(skipDirection) {
-    chrome.storage.sync.get({ skip_enabled: true },
+    chrome.storage.sync.get({skip_enabled: true},
         function (items) {
             if (items.skip_enabled) {
                 action = skipDirection;
@@ -54,7 +54,7 @@ function skipButtonPress(skipDirection) {
 
 function gotoGetWindows() {
     ymTab = null;
-    chrome.windows.getAll({ populate: true }, getWindows);
+    chrome.windows.getAll({populate: true}, getWindows);
 }
 
 function getWindows(windows) {
@@ -78,11 +78,7 @@ function getWindows(windows) {
 function performAction() {
     switch (action) {
         case ACTION_PLAY:
-            chrome.storage.sync.get({ play: "first" }, function (items) {
-                chrome.tabs.executeScript(ymTab.id, { code: 'var play = "' + items.play + '";' }, function () {
-                    chrome.tabs.executeScript(ymTab.id, { file: "action-play.js" }, playPause);
-                });
-            });
+            play()
             break;
         case ACTION_FORWARD:
             skip("next");
@@ -94,25 +90,41 @@ function performAction() {
 }
 
 function openNewTab() {
-    chrome.browserAction.setIcon({ path: "images/Play.png" });
-    chrome.browserAction.setTitle({ title: chrome.i18n.getMessage("Play") });
-    chrome.storage.sync.get({ page: "default" }, function (items) {
+    chrome.action.setIcon({path: "images/Play.png"});
+    chrome.action.setTitle({title: chrome.i18n.getMessage("Play")});
+    chrome.storage.sync.get({page: "default"}, function (items) {
         if (items.page != "none") {
-            chrome.storage.sync.get({ pin_tab: false }, function (items) {
-                chrome.tabs.create({ url: URL, pinned: items.pin_tab });
+            chrome.storage.sync.get({pin_tab: false}, function (items) {
+                chrome.tabs.create({url: URL, pinned: items.pin_tab});
             });
         }
     });
 }
 
-function skip(type) {
-    chrome.tabs.executeScript(ymTab.id, { code: 'var type = "' + type + '";' },
-        function () {
-            chrome.tabs.executeScript(ymTab.id, { file: "action-skip.js" });
+function play() {
+    chrome.scripting.executeScript({target: {tabId: ymTab.id}, files: ["action-play.js"]}, () => {
+        chrome.scripting.executeScript({
+            target: {tabId: ymTab.id},
+            func: () => performPlay()
+        }).then(injectionResults => {
+            for (const {frameId, result} of injectionResults) {
+                playPause(result);
+            }
         });
+    });
 }
 
-function playPause(icon) {
-    chrome.browserAction.setIcon({ path: "images/" + icon + ".png" });
-    chrome.browserAction.setTitle({ title: chrome.i18n.getMessage(icon.toString()) });
+function skip(type) {
+    chrome.scripting.executeScript({target: {tabId: ymTab.id}, files: ["action-skip.js"]}, () => {
+        chrome.scripting.executeScript({
+            target: {tabId: ymTab.id},
+            args: [type],
+            func: (...args) => performSkip(...args),
+        })
+    });
+}
+
+function playPause(state) {
+    chrome.action.setIcon({path: "images/" + state + ".png"});
+    chrome.action.setTitle({title: chrome.i18n.getMessage(state.toString())});
 }

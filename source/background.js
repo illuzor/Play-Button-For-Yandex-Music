@@ -11,6 +11,13 @@ var action = "";
 chrome.action.onClicked.addListener(buttonClick);
 chrome.commands.onCommand.addListener(mediaButtonPress);
 
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        chrome.action.setIcon({path: "images/" + request.state + ".png"});
+        chrome.action.setTitle({title: chrome.i18n.getMessage(request.state)});
+    }
+);
+
 function buttonClick() {
     action = ACTION_PLAY;
     playFromMediaKey = false;
@@ -102,16 +109,10 @@ function openNewTab() {
 }
 
 function play() {
-    chrome.scripting.executeScript({target: {tabId: ymTab.id}, files: ["action-play.js"]}, () => {
-        chrome.scripting.executeScript({
-            target: {tabId: ymTab.id},
-            func: () => performPlay()
-        }).then(injectionResults => {
-            for (const {frameId, result} of injectionResults) {
-                playPause(result);
-            }
-        });
-    });
+    chrome.scripting.executeScript({
+        target: {tabId: ymTab.id},
+        files: ["action-play.js"]
+    })
 }
 
 function skip(type) {

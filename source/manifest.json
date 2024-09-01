@@ -20,6 +20,10 @@
         "scripting"
     ],
     "host_permissions": [
+        "https://music.yandex.by/*/",
+        "https://music.yandex.com/*/",
+        "https://music.yandex.kz/*/",
+        "https://music.yandex.uz/*/",
         "https://music.yandex.ru/*/"
     ],
     "background": {
@@ -28,6 +32,10 @@
     "content_scripts": [
         {
             "matches": [
+                "https://music.yandex.by/*/",
+                "https://music.yandex.com/*/",
+                "https://music.yandex.kz/*/",
+                "https://music.yandex.uz/*/",
                 "https://music.yandex.ru/*/"
             ],
             "js": [

@@ -1,4 +1,5 @@
-const URL = "https://music.yandex.ru";
+const URL = "https://music.yandex.";
+const NEW_TAB_URL = "https://music.yandex.ru";
 
 const ACTION_PLAY = "play";
 const ACTION_FORWARD = "forward";
@@ -102,7 +103,7 @@ function openNewTab() {
     chrome.storage.sync.get({page: "default"}, function (items) {
         if (items.page != "none") {
             chrome.storage.sync.get({pin_tab: false}, function (items) {
-                chrome.tabs.create({url: URL, pinned: items.pin_tab});
+                chrome.tabs.create({url: NEW_TAB_URL, pinned: items.pin_tab});
             });
         }
     });

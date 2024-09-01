@@ -3,7 +3,7 @@
     "name": "__MSG_ext_name__",
     "short_name": "__MSG_ext_short_name__",
     "description": "__MSG_ext_description__",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "author": "Artem Zanin",
     "default_locale": "en",
     "icons": {
@@ -20,6 +20,10 @@
         "scripting"
     ],
     "host_permissions": [
+        "https://music.yandex.by/*/",
+        "https://music.yandex.com/*/",
+        "https://music.yandex.kz/*/",
+        "https://music.yandex.uz/*/",
         "https://music.yandex.ru/*/"
     ],
     "background": {
@@ -28,6 +32,10 @@
     "content_scripts": [
         {
             "matches": [
+                "https://music.yandex.by/*/",
+                "https://music.yandex.com/*/",
+                "https://music.yandex.kz/*/",
+                "https://music.yandex.uz/*/",
                 "https://music.yandex.ru/*/"
             ],
             "js": [

@@ -1,28 +1,67 @@
-﻿var playButtons = document.getElementsByClassName("player-controls__btn deco-player-controls__button player-controls__btn_play");
-var playButton
+﻿var playButton = document
+    .querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_']")
+    .closest('button');
 
-if (typeof playButton === 'undefined') {
-    playButton = playButtons[0]
-    listenForPlayState(playButton)
-}
-
-if (playButton != null) {
+if (playButton) {
     playButton.click();
+    listenForPlayState(playButton);
+
+    playButton.addEventListener('click', function () {
+        setTimeout(function () {
+            const use = document.querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_'] use");
+            if (use) {
+                const isPlaying = use.getAttribute("xlink:href") === "#pause_filled_l";
+                postButtonState(isPlaying);
+            }
+        }, 50);
+    });
 }
 
 function listenForPlayState(playButton) {
+    checkAndUpdateState();
 
-    function handleClassChange(mutationsList, observer) {
-        for (const mutation of mutationsList) {
-            if (mutation.attributeName === 'class') {
-                postButtonState(mutation.target.classList.contains('player-controls__btn_pause'))
+    function checkAndUpdateState() {
+        const use = document.querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_'] use");
+        if (use) {
+            const isPlaying = use.getAttribute("xlink:href") === "#pause_filled_l";
+            postButtonState(isPlaying);
+            return isPlaying;
+        }
+        return false;
+    }
+
+    function handleButtonMutation(mutations) {
+        for (const mutation of mutations) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'aria-label') {
+                const isPlaying = mutation.target.getAttribute('aria-label') === 'Пауза';
+                postButtonState(isPlaying);
             }
         }
     }
 
-    const observer = new MutationObserver(handleClassChange);
-    const config = {attributes: true, attributeFilter: ['class']};
-    observer.observe(playButton, config);
+    const buttonObserver = new MutationObserver(handleButtonMutation);
+    buttonObserver.observe(playButton, {
+        attributes: true,
+        attributeFilter: ['aria-label']
+    });
+
+    const container = document.querySelector(".player-controls") ||
+        document.querySelector("[class*='player-controls']") ||
+        document.querySelector("[class*='Controls']") ||
+        (playButton ? playButton.closest("div[class*='Controls']") ||
+            playButton.closest("div.player") ||
+            playButton.parentElement.parentElement : null);
+
+    if (container) {
+        const containerObserver = new MutationObserver(function () {
+            checkAndUpdateState();
+        });
+        containerObserver.observe(container, {
+            childList: true,
+            subtree: true,
+            attributes: true
+        });
+    }
 }
 
 function postButtonState(isPlaying) {
@@ -32,13 +71,13 @@ function postButtonState(isPlaying) {
 
     if (isPlaying) {
         extensionIds.forEach(id => {
-            chrome.runtime.sendMessage({state: "Pause"})
-        }
+                chrome.runtime.sendMessage({state: "Pause"})
+            }
         )
     } else {
         extensionIds.forEach(id => {
-            chrome.runtime.sendMessage({state: "Play"})
-        }
+                chrome.runtime.sendMessage({state: "Play"})
+            }
         )
     }
 }

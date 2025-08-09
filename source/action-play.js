@@ -1,13 +1,18 @@
 ﻿function handleButtonMutation(mutations) {
     for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'aria-label') {
-            const isPlaying = mutation.target.getAttribute('aria-label') === 'Пауза';
-            postButtonState(isPlaying);
+            const button = mutation.target;
+            const svgUse = button.querySelector("svg use");
+            if (svgUse) {
+                const href = svgUse.getAttribute("xlink:href");
+                const isPlaying = href && href.includes("pause");
+                postButtonState(isPlaying);
+            }
         }
     }
 }
 
-function listenForPlayStateNewDesign(playButton) {
+function listenForPlayState(playButton) {
     checkAndUpdateState();
 
     function checkAndUpdateState() {
@@ -73,7 +78,7 @@ if (!playButton) {
 
 if (playButton) {
     playButton.click();
-    listenForPlayStateNewDesign(playButton);
+    listenForPlayState(playButton);
 
     playButton.addEventListener('click', function () {
         setTimeout(function () {

@@ -11,9 +11,10 @@ function listenForPlayStateNewDesign(playButton) {
     checkAndUpdateState();
 
     function checkAndUpdateState() {
-        const use = document.querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_'] use");
+        const use = document.querySelector("svg[class*='playButtonIcon'] use");
         if (use) {
-            const isPlaying = use.getAttribute("xlink:href") === "#pause_filled_l";
+            const href = use.getAttribute("xlink:href");
+            const isPlaying = href && href.includes("pause");
             postButtonState(isPlaying);
             return isPlaying;
         }
@@ -63,15 +64,23 @@ var playButton = document
     .querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_']")
     ?.closest('button');
 
+if (!playButton) {
+    const playButtonSvg = document.querySelector("svg[class*='playButtonIcon']");
+    if (playButtonSvg) {
+        playButton = playButtonSvg.closest('button');
+    }
+}
+
 if (playButton) {
     playButton.click();
     listenForPlayStateNewDesign(playButton);
 
     playButton.addEventListener('click', function () {
         setTimeout(function () {
-            const use = document.querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_'] use");
+            const use = document.querySelector("svg[class*='playButtonIcon'] use");
             if (use) {
-                const isPlaying = use.getAttribute("xlink:href") === "#pause_filled_l";
+                const href = use.getAttribute("xlink:href");
+                const isPlaying = href && href.includes("pause");
                 postButtonState(isPlaying);
             }
         }, 50);

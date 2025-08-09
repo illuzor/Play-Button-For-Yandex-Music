@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="options.css">
+</head>
+
 <body>
-    <label id="play_enabled_label">
-        <input type="checkbox" id="play_enabled">
-    </label>
+    <div class="container">
+        <div class="settings-list">
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="play_enabled">
+                <label for="play_enabled" id="play_enabled_label"></label>
+            </div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="skip_enabled">
+                <label for="skip_enabled" id="skip_enabled_label"></label>
+            </div>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="pin_tab">
+                <label for="pin_tab" id="pin_tab_label"></label>
+            </div>
+        </div>
 
-    </br>
-
-    <label id="skip_enabled_label">
-        <input type="checkbox" id="skip_enabled">
-    </label>
-
-    </br>
-
-    <label id="pin_tab_label">
-        <input type="checkbox" id="pin_tab">
-    </label>
-
-    </br>
-    </br>
-
-    <button id="save"/> <button id="shortcuts" style="float: right;"/>
+        <div class="button-container">
+            <button id="save"></button>
+            <button id="shortcuts"></button>
+        </div>
+    </div>
     <script src="options.js"></script>
 </body>
 

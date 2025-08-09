@@ -1,19 +1,25 @@
 ﻿function handleButtonMutation(mutations) {
     for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'aria-label') {
-            const isPlaying = mutation.target.getAttribute('aria-label') === 'Пауза';
-            postButtonState(isPlaying);
+            const button = mutation.target;
+            const svgUse = button.querySelector("svg use");
+            if (svgUse) {
+                const href = svgUse.getAttribute("xlink:href");
+                const isPlaying = href && href.includes("pause");
+                postButtonState(isPlaying);
+            }
         }
     }
 }
 
-function listenForPlayStateNewDesign(playButton) {
+function listenForPlayState(playButton) {
     checkAndUpdateState();
 
     function checkAndUpdateState() {
-        const use = document.querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_'] use");
+        const use = document.querySelector("svg[class*='playButtonIcon'] use");
         if (use) {
-            const isPlaying = use.getAttribute("xlink:href") === "#pause_filled_l";
+            const href = use.getAttribute("xlink:href");
+            const isPlaying = href && href.includes("pause");
             postButtonState(isPlaying);
             return isPlaying;
         }
@@ -45,21 +51,6 @@ function listenForPlayStateNewDesign(playButton) {
     }
 }
 
-function handleClassChange(mutationsList, observer) {
-    for (const mutation of mutationsList) {
-        if (mutation.attributeName === 'class') {
-            const isPlaying = mutation.target.classList.contains('player-controls__btn_pause');
-            postButtonState(isPlaying);
-        }
-    }
-}
-
-function listenForPlayStateOldDesign(playButton) {
-    const observer = new MutationObserver(handleClassChange);
-    const config = { attributes: true, attributeFilter: ['class'] };
-    observer.observe(playButton, config);
-}
-
 function postButtonState(isPlaying) {
     const EXT_ID = "ofiimbenfigghacebjfkihnklgifkcnh";
     const EXT_ID_LOCAL = "hjocpbbmnildbfmheenhbgopfobjlegj";
@@ -74,31 +65,31 @@ function postButtonState(isPlaying) {
     });
 }
 
-var playButtonNew = document
+var playButton = document
     .querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_']")
     ?.closest('button');
 
-var playButtonsOld = document.getElementsByClassName("player-controls__btn deco-player-controls__button player-controls__btn_play");
-var playButtonOld = playButtonsOld[0];
+if (!playButton) {
+    const playButtonSvg = document.querySelector("svg[class*='playButtonIcon']");
+    if (playButtonSvg) {
+        playButton = playButtonSvg.closest('button');
+    }
+}
 
-if (playButtonNew) {
-    playButtonNew.click();
-    listenForPlayStateNewDesign(playButtonNew);
+if (playButton) {
+    playButton.click();
+    listenForPlayState(playButton);
 
-    playButtonNew.addEventListener('click', function () {
+    playButton.addEventListener('click', function () {
         setTimeout(function () {
-            const use = document.querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_'] use");
+            const use = document.querySelector("svg[class*='playButtonIcon'] use");
             if (use) {
-                const isPlaying = use.getAttribute("xlink:href") === "#pause_filled_l";
+                const href = use.getAttribute("xlink:href");
+                const isPlaying = href && href.includes("pause");
                 postButtonState(isPlaying);
             }
         }, 50);
     });
-}
-else if (playButtonOld) {
-    playButtonOld.click();
-    listenForPlayStateOldDesign(playButtonOld);
-}
-else {
-    console.log("Play button not found in either design.");
+} else {
+    console.log("Play button not found");
 }

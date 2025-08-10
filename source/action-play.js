@@ -1,54 +1,46 @@
-﻿function handleButtonMutation(mutations) {
-    for (const mutation of mutations) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'aria-label') {
-            const button = mutation.target;
-            const svgUse = button.querySelector("svg use");
-            if (svgUse) {
-                const href = svgUse.getAttribute("xlink:href");
-                const isPlaying = href && href.includes("pause");
-                postButtonState(isPlaying);
-            }
-        }
-    }
+﻿var playButton
+if(!playButton){
+    let controlButtons = document.querySelectorAll("button.BaseSonataControlsDesktop_sonataButton__GbwFt");
+    playButton = controlButtons[2];
 }
 
-function listenForPlayState(playButton) {
-    checkAndUpdateState();
+playButton.click();
 
-    function checkAndUpdateState() {
-        const use = document.querySelector("svg[class*='playButtonIcon'] use");
-        if (use) {
-            const href = use.getAttribute("xlink:href");
-            const isPlaying = href && href.includes("pause");
+if (playButton) {
+    listenForPlayState(playButton);
+    const initialIsPlaying = !isPlayState(playButton);
+    postButtonState(initialIsPlaying);
+}
+
+function isPlayState(button) {
+    const svg = button.querySelector('svg use');
+    if (svg) {
+        const href = svg.getAttribute('xlink:href');
+        return href && href.includes('play_filled_l');
+    }
+    return false;
+}
+
+function listenForPlayState(button) {
+    let lastState = isPlayState(button);
+
+    function handleChanges(mutationsList, observer) {
+        const currentState = isPlayState(button);
+        if (currentState !== lastState) {
+            lastState = currentState;
+            const isPlaying = !currentState;
             postButtonState(isPlaying);
-            return isPlaying;
         }
-        return false;
     }
 
-    const buttonObserver = new MutationObserver(handleButtonMutation);
-    buttonObserver.observe(playButton, {
+    const observer = new MutationObserver(handleChanges);
+    const config = {
         attributes: true,
-        attributeFilter: ['aria-label']
-    });
-
-    const container = document.querySelector(".player-controls") ||
-        document.querySelector("[class*='player-controls']") ||
-        document.querySelector("[class*='Controls']") ||
-        (playButton ? playButton.closest("div[class*='Controls']") ||
-            playButton.closest("div.player") ||
-            playButton.parentElement.parentElement : null);
-
-    if (container) {
-        const containerObserver = new MutationObserver(function () {
-            checkAndUpdateState();
-        });
-        containerObserver.observe(container, {
-            childList: true,
-            subtree: true,
-            attributes: true
-        });
-    }
+        childList: true,
+        subtree: true,
+        attributeOldValue: true
+    };
+    observer.observe(button, config);
 }
 
 function postButtonState(isPlaying) {
@@ -57,39 +49,6 @@ function postButtonState(isPlaying) {
     let extensionIds = [EXT_ID, EXT_ID_LOCAL];
 
     extensionIds.forEach(id => {
-        if (typeof chrome !== 'undefined' && chrome.runtime) {
-            chrome.runtime.sendMessage({ state: isPlaying ? "Pause" : "Play" });
-        } else {
-            console.warn("chrome.runtime is not available.  The code is likely running outside of a Chrome extension environment.");
-        }
+        chrome.runtime.sendMessage(id, {state: isPlaying ? "Pause" : "Play"});
     });
-}
-
-var playButton = document
-    .querySelector("svg[class*='BaseSonataControlsDesktop_playButtonIcon_']")
-    ?.closest('button');
-
-if (!playButton) {
-    const playButtonSvg = document.querySelector("svg[class*='playButtonIcon']");
-    if (playButtonSvg) {
-        playButton = playButtonSvg.closest('button');
-    }
-}
-
-if (playButton) {
-    playButton.click();
-    listenForPlayState(playButton);
-
-    playButton.addEventListener('click', function () {
-        setTimeout(function () {
-            const use = document.querySelector("svg[class*='playButtonIcon'] use");
-            if (use) {
-                const href = use.getAttribute("xlink:href");
-                const isPlaying = href && href.includes("pause");
-                postButtonState(isPlaying);
-            }
-        }, 50);
-    });
-} else {
-    console.log("Play button not found");
 }

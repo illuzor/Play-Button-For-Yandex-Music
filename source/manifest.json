@@ -23,8 +23,10 @@
         "https://music.yandex.by/*/",
         "https://music.yandex.com/*/",
         "https://music.yandex.kz/*/",
-        "https://music.yandex.uz/*/",
-        "https://music.yandex.ru/*/"
+        "https://music.yandex.net/*/",
+        "https://music.yandex.ru/*/",
+        "https://music.yandex.ua/*/",
+        "https://music.yandex.uz/*/"
     ],
     "background": {
         "service_worker": "background.js"
@@ -35,8 +37,10 @@
                 "https://music.yandex.by/*/",
                 "https://music.yandex.com/*/",
                 "https://music.yandex.kz/*/",
-                "https://music.yandex.uz/*/",
-                "https://music.yandex.ru/*/"
+                "https://music.yandex.net/*/",
+                "https://music.yandex.ru/*/",
+                "https://music.yandex.ua/*/",
+                "https://music.yandex.uz/*/"
             ],
             "js": [
                 "action-play.js",
